@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farm AIOTs - ระบบจัดการฟาร์มอัจฉริยะ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'landing/css/style.css' %}">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-leaf"></i>
+                <span>Smart Farm AIOTs</span>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">หน้าแรก</a></li>
+                <li><a href="#features">ฟีเจอร์</a></li>
+                <li><a href="#about">เกี่ยวกับเรา</a></li>
+                <li><a href="#contact">ติดต่อเรา</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    ระบบจัดการฟาร์มอัจฉริยะ<br>
+                    <span class="gradient-text">Smart Farm AIOTs</span>
+                </h1>
+                <p class="hero-subtitle">
+                    เทคโนโลยี IoT และ AI เพื่อการเกษตรสมัยใหม่<br>
+                    ควบคุมและตรวจสอบฟาร์มของคุณได้ทุกที่ทุกเวลา
+                </p>
+                <div class="hero-buttons">
+                    <a href="#contact" class="btn btn-primary">เริ่มต้นใช้งาน</a>
+                    <a href="#features" class="btn btn-secondary">เรียนรู้เพิ่มเติม</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-card">
+                    <i class="fas fa-chart-line"></i>
+                    <h3>ติดตามการเติบโต</h3>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>ฟีเจอร์ของเรา</h2>
+                <p>เทคโนโลยีที่ครบครันสำหรับฟาร์มอัจฉริยะของคุณ</p>
+            </div>
+            <div class="features-grid">
+                {% for feature in features %}
+                <div class="feature-card">
+                    <div class="feature-icon">{{ feature.icon }}</div>
+                    <h3>{{ feature.title }}</h3>
+                    <p>{{ feature.description }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>เกี่ยวกับ Smart Farm AIOTs</h2>
+                    <p>
+                        เราเป็นผู้นำด้านเทคโนโลยีเกษตรอัจฉริยะ ที่นำ Internet of Things (IoT) 
+                        และ Artificial Intelligence (AI) มาประยุกต์ใช้ในการเกษตรสมัยใหม่
+                    </p>
+                    <p>
+                        ระบบของเราช่วยให้เกษตรกรสามารถตรวจสอบและควบคุมฟาร์มได้แบบเรียลไทม์
+                        ผ่านแอปพลิเคชันมือถือ ประหยัดเวลา น้ำ และทรัพยากร 
+                        พร้อมเพิ่มผลผลิตได้อย่างมีประสิทธิภาพ
+                    </p>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <h3>500+</h3>
+                            <p>ฟาร์มที่ใช้งาน</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>30%</h3>
+                            <p>ประหยัดน้ำ</p>
+                        </div>
+                        <div class="stat-item">
+                            <h3>40%</h3>
+                            <p>เพิ่มผลผลิต</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="about-card">
+                        <i class="fas fa-seedling"></i>
+                        <p>เกษตรกรรมยุค 4.0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <div class="section-header">
+                <h2>ติดต่อเรา</h2>
+                <p>สนใจเริ่มต้นใช้งาน Smart Farm AIOTs วันนี้</p>
+            </div>
+            
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="contact-content">
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <h4>ที่อยู่</h4>
+                            <p>123 ถนนเทคโนโลยี เขตนวัตกรรม<br>กรุงเทพมหานคร 10400</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <h4>โทรศัพท์</h4>
+                            <p>02-123-4567<br>089-999-9999</p>
+                        </div>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <h4>อีเมล</h4>
+                            <p>info@smartfarm.com<br>support@smartfarm.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="contact-form" method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="ชื่อของคุณ" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="อีเมล" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" name="phone" placeholder="เบอร์โทรศัพท์">
+                    </div>
+                    <div class="form-group">
+                        <textarea name="message" rows="5" placeholder="ข้อความของคุณ" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ส่งข้อความ</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-leaf"></i>
+                    <span>Smart Farm AIOTs</span>
+                </div>
+                <p>&copy; 2026 Smart Farm AIOTs. All rights reserved.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="{% static 'landing/js/main.js' %}"></script>
+</body>
+</html>

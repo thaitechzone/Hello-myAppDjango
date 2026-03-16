@@ -1,0 +1,74 @@
+# ========================================
+# Dockerfile สำหรับ Smart Farm AIOTs
+# Production-ready Django Application
+# ========================================
+
+# Stage 1: Builder
+FROM python:3.11-slim as builder
+
+# ตั้งค่า Environment Variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# ติดตั้ง dependencies ที่จำเป็นสำหรับ build
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    postgresql-client \
+    && rm -rf /var/lib/apt/lists/*
+
+# สร้าง virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# คัดลอกและติดตั้ง Python dependencies
+COPY requirements.txt .
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    pip install gunicorn psycopg2-binary whitenoise
+
+
+# Stage 2: Runtime
+FROM python:3.11-slim
+
+# ตั้งค่า Environment Variables
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PATH="/opt/venv/bin:$PATH" \
+    DJANGO_SETTINGS_MODULE=smartfarm.settings_docker
+
+# ติดตั้ง runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
+    && rm -rf /var/lib/apt/lists/* \
+    && useradd -m -u 1000 django
+
+# คัดลอก virtual environment จาก builder stage
+COPY --from=builder /opt/venv /opt/venv
+
+# สร้าง working directory
+WORKDIR /app
+
+# คัดลอกโค้ดทั้งหมด
+COPY --chown=django:django . .
+
+# สร้าง directory สำหรับ static files และ media
+RUN mkdir -p /app/staticfiles /app/media && \
+    chown -R django:django /app
+
+# เปลี่ยนเป็น non-root user
+USER django
+
+# Collect static files
+RUN python manage.py collectstatic --noinput --settings=smartfarm.settings_docker || true
+
+# เปิด port 8000
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:8000', timeout=5)" || exit 1
+
+# รันแอพพลิเคชันด้วย Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "--workers", "3", "--timeout", "60", "--access-logfile", "-", "--error-logfile", "-", "smartfarm.wsgi:application"]

@@ -1,0 +1,51 @@
+version: '3.8'
+
+# Docker Compose สำหรับ Development
+# ใช้งาน: docker-compose -f docker-compose.dev.yml up
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: smartfarm_dev_db
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: smartfarm_dev
+      POSTGRES_USER: dev_user
+      POSTGRES_PASSWORD: dev_password
+    ports:
+      - "5432:5432"
+    networks:
+      - smartfarm_dev_network
+
+  # Django Development Server
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: smartfarm_dev_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app  # Mount source code for hot reload
+    ports:
+      - "8000:8000"
+    environment:
+      - DEBUG=True
+      - DJANGO_SETTINGS_MODULE=smartfarm.settings
+      - DATABASE_URL=postgresql://dev_user:dev_password@db:5432/smartfarm_dev
+    depends_on:
+      - db
+    networks:
+      - smartfarm_dev_network
+    stdin_open: true
+    tty: true
+
+volumes:
+  postgres_dev_data:
+    name: smartfarm_dev_postgres_data
+
+networks:
+  smartfarm_dev_network:
+    driver: bridge
+    name: smartfarm_dev_network
