@@ -1,23 +1,18 @@
-# Dockerfile สำหรับ Development
-# มี Hot Reload และ Debug Tools
+# Dockerfile สำหรับ Development (SQLite3)
+# ใช้กับ Docker Desktop เพื่อทดสอบ
 
 FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1
 
-# ติดตั้ง dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    postgresql-client \
-    && rm -rf /var/lib/apt/lists/*
-
 WORKDIR /app
 
-# ติดตั้ง Python packages
+# ติดตั้ง Python packages (ไม่ต้องการ psycopg2 เพราะใช้ SQLite3)
 COPY requirements.txt .
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
-    pip install psycopg2-binary
+    pip install whitenoise
 
 # คัดลอกโค้ด (จะถูก override ด้วย volume mount)
 COPY . .
